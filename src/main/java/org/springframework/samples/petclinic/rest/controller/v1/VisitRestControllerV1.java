@@ -77,6 +77,7 @@ public class VisitRestControllerV1 implements VisitsApi {
     public ResponseEntity<VisitDto> addVisit(VisitDto visitDto) {
         HttpHeaders headers = new HttpHeaders();
         Visit visit = visitMapper.toVisit(visitDto);
+        visit.setCreatedAt(java.time.LocalDateTime.now());
         this.clinicService.saveVisit(visit);
         visitDto = visitMapper.toVisitDto(visit);
         headers.setLocation(UriComponentsBuilder.newInstance().path("/api/visits/{id}").buildAndExpand(visit.getId()).toUri());

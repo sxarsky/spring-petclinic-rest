@@ -38,6 +38,9 @@ public class Visit extends BaseEntity {
      * Holds value of property description.
      */
     @NotEmpty
+    @Column(name = "created_at")
+    private java.time.LocalDateTime createdAt;
+
     @Column(name = "description")
     private String description;
 
@@ -80,6 +83,14 @@ public class Visit extends BaseEntity {
      *
      * @return Value of property description.
      */
+    public java.time.LocalDateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(java.time.LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getDescription() {
         return this.description;
     }
