@@ -2031,6 +2031,14 @@ components:
           maxLength: 20
           pattern: '^[0-9]*$'
           example: '6085551023'
+        email:
+          title: Email address
+          description: The email address of the pet owner.
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$'
+          example: george.franklin@example.com
       required:
         - firstName
         - lastName
