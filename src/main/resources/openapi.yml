@@ -2026,6 +2026,15 @@ components:
         telephone:
           title: Telephone number
           description: The telephone number of the pet owner.
+          deprecated: true
+          type: string
+          minLength: 1
+          maxLength: 20
+          pattern: '^[0-9]*$'
+          example: '6085551023'
+        phoneNumber:
+          title: Phone number
+          description: The phone number of the pet owner. Replaces telephone.
           type: string
           minLength: 1
           maxLength: 20
@@ -2036,7 +2045,6 @@ components:
         - lastName
         - address
         - city
-        - telephone
     Owner:
       title: Owner
       description: A pet owner.

@@ -18,12 +18,15 @@ import java.util.List;
 @Mapper(uses = PetMapper.class)
 public interface OwnerMapper {
 
+    @Mapping(target = "phoneNumber", source = "telephone")
     OwnerDto toOwnerDto(Owner owner);
 
+    @Mapping(target = "telephone", expression = "java(ownerDto.getPhoneNumber() != null ? ownerDto.getPhoneNumber() : ownerDto.getTelephone())")
     Owner toOwner(OwnerDto ownerDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "pets", ignore = true)
+    @Mapping(target = "telephone", expression = "java(ownerDto.getPhoneNumber() != null ? ownerDto.getPhoneNumber() : ownerDto.getTelephone())")
     Owner toOwner(OwnerFieldsDto ownerDto);
 
     List<OwnerDto> toOwnerDtoCollection(Collection<Owner> ownerCollection);
