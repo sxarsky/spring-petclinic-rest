@@ -2171,6 +2171,13 @@ components:
           x-field-extra-annotation: "@org.springframework.samples.petclinic.rest.validation.PetAgeValidation"
         type:
           $ref: '#/components/schemas/PetType'
+        nickname:
+          title: Nickname
+          description: An informal name the owner uses for the pet.
+          type: string
+          minLength: 1
+          maxLength: 30
+          example: Bud
       required:
         - name
         - birthDate

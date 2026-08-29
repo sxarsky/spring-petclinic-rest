@@ -31,6 +31,9 @@ import java.util.*;
 @Table(name = "pets")
 public class Pet extends NamedEntity {
 
+    @Column(name = "nickname")
+    private String nickname;
+
     @Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
 
@@ -45,6 +48,14 @@ public class Pet extends NamedEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
     private Set<Visit> visits;
 
+
+    public String getNickname() {
+        return this.nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
     public LocalDate getBirthDate() {
         return this.birthDate;
     }
