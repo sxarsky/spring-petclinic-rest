@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS owners (
   first_name VARCHAR(30),
   last_name VARCHAR(30),
   address VARCHAR(255),
-  city VARCHAR(80),
+  city VARCHAR(120),
   telephone VARCHAR(20),
   INDEX(last_name)
 ) engine=InnoDB;

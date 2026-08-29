@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS owners (
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
   address VARCHAR(255) NOT NULL,
-  city VARCHAR(80) NOT NULL,
+  city VARCHAR(120) NOT NULL,
   telephone VARCHAR(20) NOT NULL
 );
 
