@@ -138,6 +138,20 @@ public class OwnerRestControllerV1 implements OwnersApi {
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
+    @Transactional
+    public ResponseEntity<Void> deleteOwnerPets(Integer ownerId) {
+        Owner owner = this.clinicService.findOwnerById(ownerId);
+        if (owner == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        for (Pet pet : new java.util.ArrayList<>(owner.getPets())) {
+            this.clinicService.deletePet(pet);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
     public ResponseEntity<PetDto> addPetToOwner(Integer ownerId, PetFieldsDto petFieldsDto) {
         Owner owner = this.clinicService.findOwnerById(ownerId);
         if (owner == null) {

@@ -408,6 +408,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
+    delete:
+      tags:
+        - owners
+      operationId: deleteOwnerPets
+      summary: Removes every pet belonging to an owner
+      description: Deletes all pets recorded against the given owner.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+      responses:
+        204:
+          description: Pets removed.
+        404:
+          description: Owner not found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        default:
+          description: Unexpected error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /owners/{ownerId}/pets/{petId}:
     get:
       tags:
