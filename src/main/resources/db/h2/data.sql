@@ -31,17 +31,17 @@ INSERT INTO types (name) VALUES
 ('hamster');
 
 -- Insert Owners
-INSERT INTO owners (first_name, last_name, address, city, telephone) VALUES 
-('George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023'),
-('Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749'),
-('Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763'),
-('Harold', 'Davis', '563 Friendly St.', 'Windsor', '6085553198'),
-('Peter', 'McTavish', '2387 S. Fair Way', 'Madison', '6085552765'),
-('Jean', 'Coleman', '105 N. Lake St.', 'Monona', '6085552654'),
-('Jeff', 'Black', '1450 Oak Blvd.', 'Monona', '6085555387'),
-('Maria', 'Escobito', '345 Maple St.', 'Madison', '6085557683'),
-('David', 'Schroeder', '2749 Blackhawk Trail', 'Madison', '6085559435'),
-('Carlos', 'Estaban', '2335 Independence La.', 'Waunakee', '6085555487');
+INSERT INTO owners (first_name, last_name, address, city, telephone, email) VALUES 
+('George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023', 'george.franklin@example.com'),
+('Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749', 'betty.davis@example.com'),
+('Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763', 'eduardo.rodriquez@example.com'),
+('Harold', 'Davis', '563 Friendly St.', 'Windsor', '6085553198', 'harold.davis@example.com'),
+('Peter', 'McTavish', '2387 S. Fair Way', 'Madison', '6085552765', 'peter.mctavish@example.com'),
+('Jean', 'Coleman', '105 N. Lake St.', 'Monona', '6085552654', 'jean.coleman@example.com'),
+('Jeff', 'Black', '1450 Oak Blvd.', 'Monona', '6085555387', 'jeff.black@example.com'),
+('Maria', 'Escobito', '345 Maple St.', 'Madison', '6085557683', 'maria.escobito@example.com'),
+('David', 'Schroeder', '2749 Blackhawk Trail', 'Madison', '6085559435', 'david.schroeder@example.com'),
+('Carlos', 'Estaban', '2335 Independence La.', 'Waunakee', '6085555487', 'carlos.estaban@example.com');
 
 -- Insert Pets
 INSERT INTO pets (name, birth_date, type_id, owner_id) VALUES 
