@@ -66,7 +66,7 @@ public class ExceptionControllerAdvice {
         problemDetail.setTitle(e.getClass().getSimpleName());
         problemDetail.setDetail(detail);
         problemDetail.setProperty("timestamp", Instant.now());
-        problemDetail.setProperty("schemaValidationErrors", List.<ValidationMessageDto>of());
+        problemDetail.setProperty("validationErrors", List.<ValidationMessageDto>of());
         return problemDetail;
     }
 
@@ -123,7 +123,7 @@ public class ExceptionControllerAdvice {
         ProblemDetail detail = this.detailBuild(e, status, request.getRequestURL(), ERROR_INVALID_REQUEST);
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            List<ValidationMessageDto> schemaValidationErrors = bindingResult.getFieldErrors().stream()
+            List<ValidationMessageDto> validationErrors = bindingResult.getFieldErrors().stream()
                 .map(fieldError -> {
                     String rejectedValue = Objects.toString(fieldError.getRejectedValue(), "null");
                     String defaultMessage = Objects.toString(fieldError.getDefaultMessage(), "Validation failed");
@@ -141,7 +141,7 @@ public class ExceptionControllerAdvice {
                 request.getMethod(),
                 request.getRequestURI(),
                 bindingResult.getFieldErrors());
-            detail.setProperty("schemaValidationErrors", schemaValidationErrors);
+            detail.setProperty("validationErrors", validationErrors);
             return ResponseEntity.status(status).body(detail);
         }
         return ResponseEntity.status(status).body(detail);

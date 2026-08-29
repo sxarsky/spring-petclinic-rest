@@ -1938,7 +1938,7 @@ components:
           format: date-time
           example: '2024-11-23T13:59:21.3820407Z'
           readOnly: true
-        schemaValidationErrors:
+        validationErrors:
           title: Schema validation errors
           description: Validation errors against the OpenAPI schema.
           type: array
@@ -1950,7 +1950,7 @@ components:
         - status
         - detail
         - timestamp
-        - schemaValidationErrors
+        - validationErrors
     ValidationMessage:
       title: Validation message
       description: Messages describing a validation error.
