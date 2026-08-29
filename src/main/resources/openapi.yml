@@ -2276,7 +2276,7 @@ components:
           description: The description for the visit.
           type: string
           minLength: 1
-          maxLength: 255
+          maxLength: 30
           example: 'rabies shot'
       required:
         - description
