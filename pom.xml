@@ -27,7 +27,7 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
 
         <!-- Maven plugins and supporting properties -->
-        <maven.checkstyle-plugin.version>3.6.0</maven.checkstyle-plugin.version>
+        <maven.checkstyle-plugin.version>3.6.1</maven.checkstyle-plugin.version>
         <maven.exec-plugin.version>3.5.0</maven.exec-plugin.version>
         <maven.jacoco-plugin.version>0.8.15</maven.jacoco-plugin.version>
         <maven.jxr-plugin.version>3.6.0</maven.jxr-plugin.version>

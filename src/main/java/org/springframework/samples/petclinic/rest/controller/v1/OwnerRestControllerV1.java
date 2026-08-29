@@ -74,16 +74,21 @@ public class OwnerRestControllerV1 implements OwnersApi {
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
     @Override
     public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
-        Collection<Owner> owners;
-        if (lastName != null) {
-            owners = this.clinicService.findOwnerByLastName(lastName);
-        } else {
-            owners = this.clinicService.findAllOwners();
-        }
+        Collection<Owner> owners = findOwners(lastName);
         if (owners.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(ownerMapper.toOwnerDtoCollection(owners), HttpStatus.OK);
+        List<OwnerDto> ownerDtos = ownerMapper.toOwnerDtoCollection(owners);
+        // The collection endpoint no longer embeds each owner's pets; callers that
+        // need them read the owner individually.
+        ownerDtos.forEach(dto -> dto.setPets(java.util.List.of()));
+        return new ResponseEntity<>(ownerDtos, HttpStatus.OK);
+    }
+
+    private Collection<Owner> findOwners(String lastName) {
+        return lastName != null
+            ? this.clinicService.findOwnerByLastName(lastName)
+            : this.clinicService.findAllOwners();
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
