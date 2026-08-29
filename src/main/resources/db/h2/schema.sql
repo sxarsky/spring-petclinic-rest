@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS visits (
   pet_id INTEGER NOT NULL,
   visit_date DATE NOT NULL,
   description VARCHAR(255) NOT NULL,
+  duration_minutes INTEGER,
   FOREIGN KEY (pet_id) REFERENCES pets(id) ON DELETE CASCADE
 );
 

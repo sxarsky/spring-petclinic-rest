@@ -2278,6 +2278,15 @@ components:
           minLength: 1
           maxLength: 255
           example: 'rabies shot'
+        durationMinutes:
+          title: Duration in minutes
+          description: How long the appointment is booked for.
+          type: integer
+          format: int32
+          minimum: 5
+          maximum: 240
+          default: 30
+          example: 30
       required:
         - description
     Visit:

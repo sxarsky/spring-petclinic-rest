@@ -42,6 +42,12 @@ public class Visit extends BaseEntity {
     private String description;
 
     /**
+     * Holds value of property durationMinutes.
+     */
+    @Column(name = "duration_minutes")
+    private Integer durationMinutes;
+
+    /**
      * Holds value of property pet.
      */
     @ManyToOne
@@ -80,6 +86,14 @@ public class Visit extends BaseEntity {
      *
      * @return Value of property description.
      */
+    public Integer getDurationMinutes() {
+        return this.durationMinutes;
+    }
+
+    public void setDurationMinutes(Integer durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
     public String getDescription() {
         return this.description;
     }
