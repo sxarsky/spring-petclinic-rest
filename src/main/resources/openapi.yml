@@ -359,6 +359,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
+  /owners/{ownerId}/reminders:
+    get:
+      tags:
+        - owners
+      operationId: listOwnerReminders
+      summary: Lists the upcoming visits for an owner
+      description: Returns the owner's visits that are still to come, most recent first.
+      parameters:
+        - name: ownerId
+          in: path
+          description: The ID of the pet owner.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+      responses:
+        '200':
+          description: Owner reminder details found and returned.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Visit'
+        '404':
+          description: Owner not found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        default:
+          description: Unexpected error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /owners/{ownerId}/pets:
     post:
       tags:

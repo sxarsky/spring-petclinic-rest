@@ -16,7 +16,9 @@
 
 package org.springframework.samples.petclinic.rest.controller.v1;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
@@ -106,6 +108,23 @@ public class OwnerRestControllerV1 implements OwnersApi {
         headers.setLocation(UriComponentsBuilder.newInstance()
             .path("/api/owners/{id}").buildAndExpand(owner.getId()).toUri());
         return new ResponseEntity<>(ownerDto, headers, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
+    @Override
+    public ResponseEntity<List<VisitDto>> listOwnerReminders(Integer ownerId) {
+        Owner owner = this.clinicService.findOwnerById(ownerId);
+        if (owner == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        LocalDate today = LocalDate.now();
+        List<VisitDto> reminders = owner.getPets().stream()
+            .flatMap(pet -> pet.getVisits().stream())
+            .filter(visit -> visit.getDate() != null && !visit.getDate().isBefore(today))
+            .sorted(Comparator.comparing(Visit::getDate))
+            .map(visitMapper::toVisitDto)
+            .toList();
+        return new ResponseEntity<>(reminders, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole(@roles.OWNER_ADMIN)")
