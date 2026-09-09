@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.mapper;
 import org.jspecify.annotations.NonNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
@@ -33,6 +34,15 @@ public interface PetMapper {
     @Mapping(target = "owner", ignore = true)
     @Mapping(target = "visits", ignore = true)
     Pet toPet(PetFieldsDto petFieldsDto);
+
+    /**
+     * Copies every settable field of {@link PetFieldsDto} onto an existing {@link Pet}; see
+     * {@code OwnerMapper.updateOwnerFromFields} for why update handlers go through the mapper.
+     */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "visits", ignore = true)
+    void updatePetFromFields(PetFieldsDto petFieldsDto, @MappingTarget Pet pet);
 
     PetTypeDto toPetTypeDto(PetType petType);
 

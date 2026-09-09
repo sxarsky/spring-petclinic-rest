@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.rest.controller.BindingErrorsResponse;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.samples.petclinic.rest.dto.ValidationMessageDto;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -114,6 +117,72 @@ public class ExceptionControllerAdvice {
      * @param request {@link HttpServletRequest} object referring to the current request.
      * @return A {@link ResponseEntity} containing the error information and a 400 Bad Request status.
      */
+    /**
+     * Handles {@link ConstraintViolationException}, raised when a bean-validation constraint fails outside
+     * request-body binding -- a query or path parameter, or an entity constraint checked at flush time. Without
+     * this handler such a violation falls through to {@link #handleGeneralException} and is reported as a 500,
+     * which tells the caller their own input error is a server fault.
+     *
+     * @param e The {@link ConstraintViolationException} to be handled
+     * @param request {@link HttpServletRequest} object referring to the current request.
+     * @return A {@link ResponseEntity} containing the error information and a 400 Bad Request status
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public ResponseEntity<ProblemDetail> handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(constraintDetail(e, request));
+    }
+
+    /**
+     * Handles {@link TransactionSystemException}, which is what a constraint violation detected at flush time is
+     * wrapped in by the time it leaves the transaction boundary. Unwrapped to the underlying
+     * {@link ConstraintViolationException} so the caller gets the same 400 and the same field-level detail it
+     * would have received had the constraint been checked during binding; anything else stays a 500.
+     *
+     * @param e The {@link TransactionSystemException} to be handled
+     * @param request {@link HttpServletRequest} object referring to the current request.
+     * @return A {@link ResponseEntity} carrying 400 when a constraint violation caused it, otherwise 500
+     */
+    @ExceptionHandler(TransactionSystemException.class)
+    @ResponseBody
+    public ResponseEntity<ProblemDetail> handleTransactionSystemException(TransactionSystemException e, HttpServletRequest request) {
+        Throwable cause = e.getMostSpecificCause();
+        if (cause instanceof ConstraintViolationException cve) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(constraintDetail(cve, request));
+        }
+        return handleGeneralException(e, request);
+    }
+
+    /**
+     * Builds the 400 ProblemDetail for a {@link ConstraintViolationException}, shaping each violation the same way
+     * {@link #handleMethodArgumentNotValidException} shapes a field error so both paths look identical to a client.
+     */
+    private ProblemDetail constraintDetail(ConstraintViolationException e, HttpServletRequest request) {
+        logger.warn("Constraint violation at {} {}: {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+        ProblemDetail detail = this.detailBuild(e, HttpStatus.BAD_REQUEST, request.getRequestURL(), ERROR_INVALID_REQUEST);
+        List<ValidationMessageDto> schemaValidationErrors = e.getConstraintViolations().stream()
+            .map(violation -> {
+                String field = violationField(violation);
+                String rejectedValue = Objects.toString(violation.getInvalidValue(), "null");
+                String defaultMessage = Objects.toString(violation.getMessage(), "Validation failed");
+                String message = "Field '%s' %s (rejected value: %s)".formatted(field, defaultMessage, rejectedValue);
+                return new ValidationMessageDto(message)
+                    .putAdditionalProperty("field", field)
+                    .putAdditionalProperty("rejectedValue", rejectedValue)
+                    .putAdditionalProperty("defaultMessage", defaultMessage);
+            })
+            .toList();
+        detail.setProperty("schemaValidationErrors", schemaValidationErrors);
+        return detail;
+    }
+
+    /** The last node of the property path, so a caller sees "telephone" rather than "updateOwner.arg1.telephone". */
+    private String violationField(ConstraintViolation<?> violation) {
+        String path = Objects.toString(violation.getPropertyPath(), "");
+        int lastDot = path.lastIndexOf('.');
+        return lastDot >= 0 ? path.substring(lastDot + 1) : path;
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {

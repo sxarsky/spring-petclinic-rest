@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS pets (
   type_id INTEGER NOT NULL,
   owner_id INTEGER NOT NULL,
   FOREIGN KEY (owner_id) REFERENCES owners(id) ON DELETE CASCADE,
-  FOREIGN KEY (type_id) REFERENCES types(id) ON DELETE CASCADE
+  FOREIGN KEY (type_id) REFERENCES types(id)
 );
 
 CREATE INDEX idx_pets_name ON pets(name);
